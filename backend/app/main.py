@@ -53,8 +53,14 @@ app.include_router(admin_routes.router)
 app.include_router(feedback_routes.router)
 
 # Locally uploaded dish images (STORAGE_BACKEND=local)
+import os
+from pathlib import Path
+ 
+if os.environ.get("VERCEL"):
+    settings.UPLOAD_DIR = Path("/tmp/uploads")
+ 
 settings.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+app.mount("/uploads", StaticFiles(directory=str(settings.UPLOAD_DIR)), name="uploads")
 
 
 @app.get("/api/health", tags=["meta"])
