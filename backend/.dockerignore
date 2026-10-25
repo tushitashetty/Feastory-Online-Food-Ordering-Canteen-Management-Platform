@@ -1,0 +1,6 @@
+.env
+feastory.db
+uploads/
+__pycache__/
+*.pyc
+.venv/

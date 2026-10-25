@@ -1,0 +1,182 @@
+/* ------------------------------------------------------------------
+   Additions on top of the original style.css. Same variables, same
+   bordered-box look. Nothing in style.css is overridden except where
+   noted.
+   ------------------------------------------------------------------ */
+
+/* The original .home rule painted the whole body; scope it to the slider */
+main > .home{ min-height: auto; }
+
+/* Footer always sits at the bottom, even on short pages (empty cart, login) */
+#root{ min-height: 100vh; display: flex; flex-direction: column; }
+#root > main{ flex: 1 0 auto; }
+#root > footer{ flex-shrink: 0; }
+
+/* Home banner: keep text + image together in the middle of the page instead
+   of hugging the two edges on wide screens */
+/* Home banner: two equal, truly centered columns (fixes the text pushing the layout left) */
+.home .slide{
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   align-items: center;
+   gap: 3rem;
+   max-width: 110rem;
+   margin: 0 auto;
+}
+.home .slide .content{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+   min-width: 0;
+}
+.home .slide .image{ min-width: 0; }
+.home .slide .image img{ max-width: 100%; }
+
+@media (max-width: 768px){
+   .home .slide{ grid-template-columns: 1fr; }
+}
+.home .slide .content{ display: flex; flex-direction: column; align-items: center; }
+
+/* Profile pop-up: centre the profile / login / logout buttons */
+.header .flex .profile .flex{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 1rem;
+}
+.header .flex .profile .flex .btn,
+.header .flex .profile .flex .delete-btn{ margin: 0; }
+
+/* Star-rating picker on the feedback form */
+.contact .row form .rating{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: .6rem;
+   margin: 1rem 0;
+   font-size: 1.6rem;
+   color: var(--light-color);
+}
+.contact .row form .rating i{ font-size: 2.6rem; color: var(--yellow); cursor: pointer; }
+.contact .row form .rating i:hover{ transform: scale(1.15); }
+.contact .row form .rating span{ margin-left: .8rem; min-width: 8rem; text-align: left; }
+
+/* Empty-state text ("your cart is empty!") */
+.empty{
+   text-align: center;
+   font-size: 2rem;
+   color: var(--light-color);
+   padding: 2rem;
+   text-transform: capitalize;
+}
+
+/* Dish images that are wider than tall shouldn't stretch */
+.products .box-container .box img{ background: var(--white); }
+
+/* Order status pill on the student's orders page */
+.status{ text-transform: capitalize; }
+.status-placed{ color: var(--red) !important; }
+.status-ready{ color: #d4a800 !important; }
+.status-served{ color: #27ae60 !important; }
+
+/* Canteen orders board: two columns like the original inline styles */
+.orders .board{
+   display: flex;
+   gap: 2rem;
+   justify-content: center;
+   flex-wrap: wrap;
+}
+.orders .board .column{ flex: 1; min-width: 30rem; }
+.orders .board .column .box{ margin-bottom: 2rem; }
+.orders .served-count{
+   text-align: center;
+   font-size: 2rem;
+   color: var(--light-color);
+   margin-bottom: 2rem;
+}
+.orders .served-count span{ color: var(--black); }
+
+/* Sold-out dish on the manager's menu */
+.products .box-container .box.sold-out img{ filter: grayscale(1); opacity: .6; }
+.products .box-container .box .btn.small,
+.products .box-container .box .delete-btn.small{
+   margin-top: 0;
+   padding: .8rem 1.2rem;
+   font-size: 1.4rem;
+}
+/* Manager's ✕ button should stay visible (students' cart already does) */
+.products .box-container .box .fa-times{ z-index: 2; }
+
+/* Wallet top-up form on profile */
+.user-details .user .topup{ display: flex; gap: 1rem; margin-top: 2rem; }
+.user-details .user .topup .box{
+   flex: 1;
+   border: var(--border);
+   padding: 1.2rem;
+   font-size: 1.8rem;
+   color: var(--black);
+}
+.user-details .user .topup .btn{ margin-top: 0; }
+
+/* ---- "+ Add Dish" button + popup (from canteenmenu.html inline styles) */
+.add-dish-btn{
+   position: fixed;
+   bottom: 30px;
+   right: 30px;
+   background-color: #fed330;
+   color: black;
+   padding: 15px 20px;
+   border: none;
+   border-radius: 10px;
+   font-weight: bold;
+   font-size: 1.6rem;
+   cursor: pointer;
+   box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+   z-index: 9998;
+}
+.add-dish-btn:hover{ letter-spacing: .1rem; }
+
+.add-dish-form{
+   position: fixed;
+   bottom: 80px;
+   right: 30px;
+   background-color: white;
+   border-radius: 15px;
+   padding: 25px 30px;
+   box-shadow: 0 0 20px rgba(0,0,0,0.2);
+   width: 380px;
+   max-width: calc(100vw - 4rem);
+   max-height: calc(100vh - 12rem);
+   overflow-y: auto;
+   z-index: 9999;
+   font-size: 16px;
+}
+.add-dish-form h3{ margin-bottom: 20px; font-size: 2.2rem; color: var(--black); }
+.add-dish-form label{ display: block; font-size: 1.5rem; color: var(--light-color); margin-top: 1.2rem; }
+.add-dish-form input,
+.add-dish-form select{
+   width: 100%;
+   margin-top: .4rem;
+   padding: 1rem;
+   font-size: 1.6rem;
+   border: var(--border);
+   color: var(--black);
+   background: var(--white);
+}
+.add-dish-form .preview{
+   width: 100%;
+   height: 14rem;
+   object-fit: contain;
+   margin-top: 1rem;
+   border: var(--border);
+}
+.add-dish-form .actions{ display: flex; gap: 1rem; margin-top: 1.5rem; }
+.add-dish-form .actions .btn,
+.add-dish-form .actions .delete-btn{ margin-top: 0; padding: 8px 12px; font-size: 14px; }
+
+@media (max-width: 450px){
+   .add-dish-form{ right: 1rem; bottom: 7rem; padding: 2rem; }
+   .add-dish-btn{ right: 1rem; bottom: 1.5rem; }
+}

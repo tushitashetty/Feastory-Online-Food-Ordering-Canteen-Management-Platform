@@ -1,0 +1,49 @@
+# One-command local stack (or a single-EC2 deployment):
+#   docker compose up --build
+# Frontend  -> http://localhost        (nginx, proxies /api to backend)
+# Backend   -> http://localhost:8000   (FastAPI docs at /docs)
+# MongoDB   -> localhost:27017         (drop this service and set MONGO_URL to Atlas in prod)
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand('ping').ok"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017}
+      MONGO_DB: feastory
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:5173}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost}
+      S3_BUCKET: ${S3_BUCKET:-}
+      AWS_REGION: ${AWS_REGION:-ap-south-1}
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ""      # same-origin: nginx proxies /api -> backend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodata:
+  uploads:
